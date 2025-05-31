@@ -9,6 +9,9 @@
 \usepackage{amssymb}
 \usepackage{bm}
 
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{circuitikz}
 
 \begin{document}
 	\section{Auseinanderbau}
@@ -52,17 +55,20 @@
 		
 		\noindent Auf der Homepage von Rafael Micro \url{https://www.rafaelmicro.com/satellite/} finden sich diverse Downconverter speziell für den Einsatz für den Satellitenempfang, diese sind dort tabellarisch aufgeführt. Dort tauchen auch Downconverter ICs mit ähnlicher Teilenummer auf:\\
 		
-		{\scriptsize
-			\begin{tabular}{llllll}
-				Part No & Ku-band LNB RF Downconverter & Control & Input Range (GHz) & LO (GHz) & Vcc (V)\\
-				$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$\\
-				RT342M & Quad & 13 / 18VDC & 11.70 \~ 12.75 & 10.75 & 5.0\\
-				RT343M & Quad & 13 / 18VDC & 12.25 \~ 12.75 & 11.30 & 5.0\\
-				RT346M & Quattro Universal & - & 11.70 \~ 12.75 & 10.75 & 3.3\\
-				RT348M & Quattro Universal & - & 11.70 \~ 12.75 & 10.75 & 5.0\\
-				$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$
-			\end{tabular}
-		}\captionof{table}{Auszug aus dem Produktangebot von Rafael Micro\label{tab:RafaelMicro_Downconverters}}\phantom{}\linebreak
+		
+		\begin{minipage}{\textwidth}
+			{\scriptsize
+				\begin{tabular}{llllll}
+					Part No & Ku-band LNB RF Downconverter & Control & Input Range (GHz) & LO (GHz) & Vcc (V)\\
+					$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$\\
+					RT342M & Quad & 13 / 18VDC & 11.70 \~ 12.75 & 10.75 & 5.0\\
+					RT343M & Quad & 13 / 18VDC & 12.25 \~ 12.75 & 11.30 & 5.0\\
+					RT346M & Quattro Universal & - & 11.70 \~ 12.75 & 10.75 & 3.3\\
+					RT348M & Quattro Universal & - & 11.70 \~ 12.75 & 10.75 & 5.0\\
+					$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$
+				\end{tabular}
+			}\captionof{table}{Auszug aus dem Produktangebot von Rafael Micro.\label{tab:RafaelMicro_Downconverters}}
+		\end{minipage}
 		
 		
 		\noindent Da es sich hier beim fuba DEK 417 um einen Quad LNB handelt, wird davon ausgegangen, dass der hier verbaute IC RT350A mit dem RT342M, beziehungsweise em RT343M verwandt ist. Als Betriebsspannung ist hier 5 Volt angegeben. Durch Untersuchung der ZF-seitigen Platine \ref{label} wurde dort eine entsprechende Versorgung von etwa 5 Volt identifiziert.\\
@@ -71,7 +77,74 @@
 		
 		\noindent Der RT350A sitzt in einem TQFN-24 Gehäuse mit exponiertem Thermal Pad. Der Pin für die 5V-Versorgungsspannung kann ermittelt werden, indem die Versorgungsschiene ab der Durchführung zum ZF-seitigen Teil bis hin zum IC verfolgt wird. Diese endet an Pin 16. Eine mit Masse verbundene, relativ breite Leitung führt augenscheinlich zum Thermal Pad, was sich unter aus dem Gesichtspunkt erklären lässt, dass außer Pin 3 über einen 0 Ohm-Jumper kein sonstiger Pin mit Masse verbunden ist.\\
 		
-		\noindent Pins 1, 2 und 4, 5 führen jeweils zu verschiedenen Abgriffen an der Kette von je drei LNA-Stufen pro Polarisationspfad. In Pins 24 und 6 enden die Pfade ausgehend von den jeweiligen Antennen für die beiden Polarisationen. Mutmaßlich keine Verbindung haben Pins 7, 8, 24, 25. Die vier Ausgänge in Richtung ZF-seitige Platine enden nach Anpassungs- oder Filternetzwerken in Pins 12, 14, 18 und 20. Von Wichtigkeit sind noch die beiden Pins 9 und 10, an die der Quarz angeschlossen ist. Sonstige Verbindungen lassen sich ohne größeren Aufwand so nicht nachvollziehen.
+		\noindent Pins 1, 2 und 4, 5 führen jeweils zu verschiedenen Abgriffen an der Kette von je drei LNA-Stufen pro Polarisationspfad. Eventuell stellen diese eine Art AGC dar und können LNAs aktivieren oder deaktivieren, dies ist lediglich eine Vermutung. In Pins 24 und 6 enden die Pfade ausgehend von den jeweiligen Antennen für die beiden Polarisationen. Mutmaßlich keine Verbindung haben Pins 7, 8, 22, 23. Die vier Ausgänge in Richtung ZF-seitige Platine enden nach Anpassungs- oder Filternetzwerken in Pins 12, 14, 18 und 20. Von Wichtigkeit sind noch die beiden Pins 9 und 10, an die der Quarz angeschlossen ist. Sonstige Verbindungen lassen sich ohne größeren Aufwand so nicht nachvollziehen.
+	
+	
+	\begin{minipage}{\textwidth}
+		\centering
+		\begin{circuitikz}
+			\ctikzset{multipoles/font={\color{red}\tiny}}
+			\draw (0,0) node[qfpchip,
+			num pins=24,
+			external pad fraction=6](C){}; %RT350A
+			
+			\draw (C.pin 1) node[anchor=east]{POL1\_SENSE1?};
+			\draw (C.pin 2) node[anchor=east]{POL1\_SENSE2?};
+			\draw (C.pin 3) node[anchor=east]{GND};
+			\draw (C.pin 4) node[anchor=east]{POL2\_SENSE2?};
+			\draw (C.pin 5) node[anchor=east]{POL2\_SENSE1?};
+			\draw (C.pin 6) node[anchor=east]{POL2\_FEED};
+			
+			\draw (C.pin 7) node[anchor=east,rotate=90]{NC};
+			\draw (C.pin 8) node[anchor=east,rotate=90]{NC};
+			\draw (C.pin 9) node[anchor=east,rotate=90]{XTAL1};
+			\draw (C.pin 10) node[anchor=east,rotate=90]{XTAL2};
+			\draw (C.pin 11) node[anchor=east,rotate=90]{?};
+			\draw (C.pin 12) node[anchor=east,rotate=90]{OUT1};
+			
+			\draw (C.pin 13) node[anchor=west]{?};
+			\draw (C.pin 14) node[anchor=west]{OUT2};
+			\draw (C.pin 15) node[anchor=west]{?};
+			\draw (C.pin 16) node[anchor=west]{VCC 5V};
+			\draw (C.pin 17) node[anchor=west]{?};
+			\draw (C.pin 18) node[anchor=west]{OUT3};
+			
+			\draw (C.pin 19) node[anchor=west,rotate=90]{?};
+			\draw (C.pin 20) node[anchor=west,rotate=90]{OUT4};
+			\draw (C.pin 21) node[anchor=west,rotate=90]{?};
+			\draw (C.pin 22) node[anchor=west,rotate=90]{NC};
+			\draw (C.pin 23) node[anchor=west,rotate=90]{NC};
+			\draw (C.pin 24) node[anchor=west,rotate=90]{POL1\_FEED};
+			
+			\draw (C) node[shape=rectangle, minimum width=20mm, minimum height=20mm,draw=black]{GND};
+			
+			%\draw (C.pin 1) -- ++(-0.5,0) to[R] ++(0,-2) node[ground]{};
+		\end{circuitikz}
+		\captionof{figure}{Partielles Pinout von Rafael Micro RT350A.\label{fig:RafaelMicro_Pinout}}
+	\end{minipage}\vspace{2ex}
+	
+	\noindent Bisher ungeklärt ist, welcher der beiden Pins für den Quarz Eingang, beziehungsweise Ausgang des Inverters oder Taktgenerators ist. %Als einfachen Test werden die beiden Eingangswiderstände der Pins ohne anliegende Versorgungsspannung mit dem Widerstandsmodus des Multimeters gegen Masse gemessen. Pin 9 hat nach Masse hin etwa 40.2 k$\Omega$, Pin 10 etwa 16 k$\Omega$ (rot auf Masse), beziehungsweise 17.8 k$\Omega$ (schwarz auf Masse). Die Impedanzen unterscheiden sich nicht in der erhofften Größenordnung, somit kann nicht zweifelsfrei auf eine niederohmige Ausgangsstufe und hochohmige Eingangsstufe geschlossen werden.\\
+	%\noindent Da diese mittelalterliche Methode nicht funktioniert hat, wird 
+	Dazu wird der RT350A nun in Betrieb genommen. Über die Kathode einer der beiden Diodenpacks sowie das Alu-Gehäuse als Masse wird eine Versorgungsspannung von 5 V eingespeist. Bei einer mit dem verwendeten Labornetzgerät QJE3005E~III nicht detektierbaren Stromaufnahme läuft das IC an. Mit dem x10-Tastkopf des Oszilloskops (SIGLENT~SDS~1102CNL) sind deutliche 25 MHz-Signale an beiden Pins sichtbar. Pin 9 zeigt einen sinusförmigen Verlauf mit ca. 896 mVpp und schwingt augenscheinlich frei, während Pin 10 einen stark verzerrten Sinusverlauf mit etwa 696 mVpp aufweist. Aufgrund der Verzerrung wird darauf geschlossen, dass Pin 10 den Ausgang des Inverters und Pin 9 den entsprechenden Eingang darstellt, obwohl bei diesem eine niedrigere Spitze-zu-Spitze-Spannung messbar ist.
+	
+	\vspace{2ex}
+	\begin{minipage}{0.9\textwidth}
+		\centering
+		\begin{tabular}{rl}
+			
+			\begin{minipage}{0.5\textwidth}
+				\includegraphics[width=\textwidth]{./img/Pin 9.jpg}
+				\captionof{figure}{Pin 9, AC Kopplung}
+			\end{minipage}
+			&
+			\begin{minipage}{0.5\textwidth}
+				\includegraphics[width=\textwidth]{./img/Pin 10.jpg}
+				\captionof{figure}{Pin 10, AC Kopplung}
+			\end{minipage}
+		\end{tabular}
+	\end{minipage}
+	\vspace{2ex}
+	
 	
 	\section{Modifikation der Spannungsversorgung}
 	
