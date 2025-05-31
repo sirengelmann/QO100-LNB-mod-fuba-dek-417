@@ -1,0 +1,80 @@
+\documentclass[]{article}
+
+\usepackage[a4paper]{geometry}
+\usepackage[ngerman]{babel}
+\usepackage{hyperref}
+\usepackage{capt-of}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+
+
+\begin{document}
+	\section{Auseinanderbau}
+	
+	
+	\section{Untersuchung der Platinen}
+	
+	\subsection{ZF-seitige Platine}
+		
+		Unmittelbar an den vier Eingängen sind von den Haupt-Mikrostreifenleitungen abzweigende, gleich aufgebaute, mäanderförmige Mikrowellenstrukturen zu erkennen, die vermutlich einen Tiefpassfilter darstellen. Die Signalpfade wandern ohne großen Umweg durch je einen 10 Ohm Widerstand Richtung RF-seitige Platine.\\
+		
+	\subsubsection{78HC06 Linearregler}
+		
+		\noindent Die durch einen angeschlossenen Teilnehmer eingespeiste Spannung von 9.5 bis 19 V (siehe \url{https://www.fuba.de/media/download/file//b/a/ba\_dek\_7.pdf})kann diesen passieren und findet jeweils ihren Weg zum Pin 3 eines ICs mit SOT-89-3 Gehäuse. Die aufgedruckten Markierungen sind 78HC06 und MC 104. Dieser Baustein wird als HT78H06ARDZ 6 V Limearregler von HTCSEMI identifiziert. Dieser ist bei LCSC zu finden (siehe \url{https://www.lcsc.com/product-detail/Voltage-Regulators-Linear-Low-Drop-Out-LDO-Regulators_HTCSEMI-HT78H06ARDZ_C2895055.html?s_z=n_78H06}). Auf dem Vorschaubild bei LCSC ist ebenfalls das MC in der zweiten Reihe erkennbar. Bis auf eine Ziffer, vermutlich die Chargen- oder Fab-nummer, ist die Beschriftung gleich. Pin 3 ist laut Datenblatt (siehe \url{https://www.lcsc.com/datasheet/lcsc_datasheet_2410121317_HTCSEMI-HT78H06ARDZ_C2895055.pdf}) Vin, also die Eingangsspannung. Aus dem Footprint auf der Leiterplatte kann auch eine Masseverbindung auf Pin 2 und Tab mit den sich im Datenblatt befindlichen Angaben abgeglichen werden. Zusätzlich sind zwei eng an den Anschlüssen platzierte MLCC-Kondensatoren zur Spannungsstabilisierung zu erkennen. Pin 1 ist demnach der Ausgang mit 6 V.\\
+		
+		\noindent \textit{Nebenbei sei noch angemerkt, dass Überschrift und Feature-Liste des Datenblatts, sowie die Angabe bei LCSC einen maximalen Ausgangsstrom von 0.3 A suggeriert, im Einleitungstext jedoch von 100 mA die Rede ist. Das kleine SOT-89-Package wäre sicherlich mit 100 mA eher zufriedener.}\\
+		
+		
+	\subsubsection{BAV70 Diodenpacks}
+		
+		\noindent Die Ausgänge der vier Linearregler führen paarweise zu Pins 1 und 2 von ICs in einem SOT23-Gehäuse mit Markierung A4W 01. Durch eine Datenbank von SMD-Markierungen und den anschließenden Abgleich mit dem Datenblatt kann stark vermutet werden, dass es sich bei A4W um zwei integrierte Dioden mit gemeinsamer Kathode, Bezeichnung BAV70, vermutlich von Nexperia handelt (siehe Datenblatt \url{https://assets.nexperia.com/documents/data-sheet/BAV70.pdf}).Diese sind Hochgeschwindigkeitsdioden mit einer reverse recovery time von 4 ns, jedoch vergleichweise hoher Vorwärtsspannung von 1 V bei 50 mA \glqq gepulst \grqq{}. Pins 1 und 2 stellen die Anoden dar. Folglich werden diese Diodenpacks vermutlich zur Vermeidung von Backfeeding in die Linearregler verwendet, wenn nicht alle vier Ausgänge des LNB in Benutzung sind.\\
+		´
+		\noindent Die Kathoden der beiden Diodenpacks treffen schließlich in einer gemeinsamen Leiterbahn aufeinander und laufen direkt zu den Verbindungen zur RF-seitigen Platine.\\
+		
+	\subsubsection{Beobachtungen zum Layout der Versorgungsspannungsleitung}
+		
+		\noindent An dieser Leiterbahn fallen zwei kuriose Dinge auf. Zum einen kreuzt diese nämlich auf dem Weg zur RF-seitigen Platine drei Mikrostreifenleitungen, da der Anschluss der Versorgungsspannung aus Sicht der ZF-seitigen Platine ganz links liegt. Auffällig ist, dass nicht etwa die Versorgungsspannung über 0 Ohm-Widerstände über diese hüpft, sondern dass die Mikrostreifenleitungen mit vermutlich kritischer Impedanz selbst aufgetrennt sind und über einen Widerstand als Brücke über die Versorgungsspannung hinweggeführt werden. Da diese wesentlich dünner ist, konnten als Brücken 0402 Bauformen verwendet werden, andersherum hätte man auf wesentlich größere Gehäuseformen zurückgreifen müssen.\\
+		
+		\noindent Außerdem fällt auf, dass an die Versorgungsspannung in regelmäßigen Abständen Stubs (Leerläufe) mit verschiedenen Längen angeschlossen sind. Vermutlich dienen diese als $\lambda/4$-Transformatoren und erzeugen bei kritischen Frequenzen auf der Versorgungsspannungsleitung einen Kurzschluss für eventuelle Störungen. Die Länge solch eines Arms beträgt etwa 3 mm ($\rightarrow\lambda/4$), was bei Mikrostreifenleitungen auf FR4-Substrat ($\epsilon_{r\text{,eff}}\approx4$) laut Online-Rechner in einer Frequenz von 12.5 GHz, also ungefähr der Eingangsfrequenz des LNBs resultiert. Vermutlich zeigten sich dort während der Entwicklung Probleme durch Einkopplungen in die Versorgungsspannung, vielleicht sogar durch Diodenpacks und Linearregler bis in die Ausgänge.
+		
+	\subsection{RF-seitige Platine}
+	
+	
+	\subsubsection{25 MHz Quarz}
+	
+		\noindent Unter Suche der Markierungen \glqq M25.00 CQ 1D\grqq{} des Quarzes und Abgleich des Gehäuses kann vermutet werden, dass es sich um einen 25 MHz-Quarz von Quantek aus der QC5A Serie, genauer den QC5A25.0000F12B33M handelt. Pins 2 und 4 sind augenscheinlich mit Masse verbunden, was sich mit der Pinbelegung des Datenblatts deckt. Aufgrund der kleinen SMD-Pads des verwendeten Footprints lässt sich dies jedoch nicht vollends überprüfen. Zu diesem Zeitpunkt der Untersuchungen ohne endgültigen Plan für einen Umbau wird auf ein Entlöten dieses Quarzes vorerst verzichtet.
+		
+	\subsubsection{Downconverter Rafael Micro RT350A}
+		
+		\noindent Zu Beginn sei gesagt, dass der spezifische Downconverter RT350A von Rafael Micro nicht dokumentiert ist. Dieser ist auch bei keinem mir bekannten Distributor erhältlich. Alles nachfolgende wird durch Transfer von verwandten Bausteinen und eigenem Reverse Engineering zusammengetragen.\\
+		
+		\noindent Auf der Homepage von Rafael Micro \url{https://www.rafaelmicro.com/satellite/} finden sich diverse Downconverter speziell für den Einsatz für den Satellitenempfang, diese sind dort tabellarisch aufgeführt. Dort tauchen auch Downconverter ICs mit ähnlicher Teilenummer auf:\\
+		
+		{\scriptsize
+			\begin{tabular}{llllll}
+				Part No & Ku-band LNB RF Downconverter & Control & Input Range (GHz) & LO (GHz) & Vcc (V)\\
+				$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$\\
+				RT342M & Quad & 13 / 18VDC & 11.70 \~ 12.75 & 10.75 & 5.0\\
+				RT343M & Quad & 13 / 18VDC & 12.25 \~ 12.75 & 11.30 & 5.0\\
+				RT346M & Quattro Universal & - & 11.70 \~ 12.75 & 10.75 & 3.3\\
+				RT348M & Quattro Universal & - & 11.70 \~ 12.75 & 10.75 & 5.0\\
+				$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$
+			\end{tabular}
+		}\captionof{table}{Auszug aus dem Produktangebot von Rafael Micro\label{tab:RafaelMicro_Downconverters}}\phantom{}\linebreak
+		
+		
+		\noindent Da es sich hier beim fuba DEK 417 um einen Quad LNB handelt, wird davon ausgegangen, dass der hier verbaute IC RT350A mit dem RT342M, beziehungsweise em RT343M verwandt ist. Als Betriebsspannung ist hier 5 Volt angegeben. Durch Untersuchung der ZF-seitigen Platine \ref{label} wurde dort eine entsprechende Versorgung von etwa 5 Volt identifiziert.\\
+		
+		\noindent Der vorliegende LNB ist jedoch im Unterschied zu den genannten Artverwandten mit Eingangsfrequenzbereichen von 10.7 GHz bis 11.7 GHz, beziehungsweise 11.7 GHz bis 12.75 GHz. Somit muss der RT350A ein Hybrid aus den in Tabelle \ref{tab:RafaelMicro_Downconverters} aufgeführten Bausteinen sein.\\
+		
+		\noindent Der RT350A sitzt in einem TQFN-24 Gehäuse mit exponiertem Thermal Pad. Der Pin für die 5V-Versorgungsspannung kann ermittelt werden, indem die Versorgungsschiene ab der Durchführung zum ZF-seitigen Teil bis hin zum IC verfolgt wird. Diese endet an Pin 16. Eine mit Masse verbundene, relativ breite Leitung führt augenscheinlich zum Thermal Pad, was sich unter aus dem Gesichtspunkt erklären lässt, dass außer Pin 3 über einen 0 Ohm-Jumper kein sonstiger Pin mit Masse verbunden ist.\\
+		
+		\noindent Pins 1, 2 und 4, 5 führen jeweils zu verschiedenen Abgriffen an der Kette von je drei LNA-Stufen pro Polarisationspfad. In Pins 24 und 6 enden die Pfade ausgehend von den jeweiligen Antennen für die beiden Polarisationen. Mutmaßlich keine Verbindung haben Pins 7, 8, 24, 25. Die vier Ausgänge in Richtung ZF-seitige Platine enden nach Anpassungs- oder Filternetzwerken in Pins 12, 14, 18 und 20. Von Wichtigkeit sind noch die beiden Pins 9 und 10, an die der Quarz angeschlossen ist. Sonstige Verbindungen lassen sich ohne größeren Aufwand so nicht nachvollziehen.
+	
+	\section{Modifikation der Spannungsversorgung}
+	
+	
+	\section{Modifikation des 25 MHz Takteingangs}
+\end{document}
