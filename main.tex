@@ -78,9 +78,9 @@ eprint=false
 		
 	\subsubsection{Beobachtungen zum Layout der Versorgungsspannungsleitung}
 		
-		\noindent An dieser Leiterbahn fallen zwei kuriose Dinge auf. Zum einen kreuzt diese nämlich auf dem Weg zur HF-seitigen Platine drei Mikrostreifenleitungen, da der Anschluss der Versorgungsspannung aus Sicht der ZF-seitigen Platine ganz links liegt. Auffällig ist, dass nicht etwa die Versorgungsspannung über 0 Ohm-Widerstände über diese hüpft, sondern dass die Mikrostreifenleitungen mit vermutlich kritischer Impedanz selbst aufgetrennt sind und über einen Widerstand als Brücke über die Versorgungsspannung hinweggeführt werden. Da diese wesentlich dünner ist, konnten als Brücken 0402 Bauformen verwendet werden, andersherum hätte man auf wesentlich größere Gehäuseformen zurückgreifen müssen.\\
+		%\noindent An dieser Leiterbahn fallen zwei kuriose Dinge auf. Zum einen kreuzt diese nämlich auf dem Weg zur HF-seitigen Platine drei Mikrostreifenleitungen, da der Anschluss der Versorgungsspannung aus Sicht der ZF-seitigen Platine ganz links liegt. Auffällig ist, dass nicht etwa die Versorgungsspannung über 0 Ohm-Widerstände über diese hüpft, sondern dass die Mikrostreifenleitungen mit vermutlich kritischer Impedanz selbst aufgetrennt sind und über einen Widerstand als Brücke über die Versorgungsspannung hinweggeführt werden. Da diese wesentlich dünner ist, konnten als Brücken 0402 Bauformen verwendet werden, andersherum hätte man auf wesentlich größere Gehäuseformen zurückgreifen müssen.\\
 		
-		\noindent Außerdem fällt auf, dass an die Versorgungsspannung in regelmäßigen Abständen Stubs (Leerläufe) mit verschiedenen Längen angeschlossen sind. Vermutlich dienen diese als $\lambda/4$-Transformatoren und erzeugen bei kritischen Frequenzen auf der Versorgungsspannungsleitung einen Kurzschluss für eventuelle Störungen. Die Länge solch eines Arms beträgt etwa 3 mm ($\rightarrow\lambda/4$), was bei Mikrostreifenleitungen auf FR4-Substrat ($\epsilon_{r\text{,eff}}\approx4$) laut Online-Rechner in einer Frequenz von 12.5 GHz, also ungefähr der Eingangsfrequenz des LNBs resultiert. Vermutlich zeigten sich dort während der Entwicklung Probleme durch Einkopplungen in die Versorgungsspannung, vielleicht sogar durch Diodenpacks und Linearregler bis in die Ausgänge.
+		\noindent Es fällt auf, dass an die Versorgungsspannung in regelmäßigen Abständen Stubs (Leerläufe) mit verschiedenen Längen angeschlossen sind. Vermutlich dienen diese als $\lambda/4$-Transformatoren und erzeugen bei kritischen Frequenzen auf der Versorgungsspannungsleitung einen Kurzschluss für eventuelle Störungen. Die Länge solch eines Arms beträgt etwa 3 mm ($\rightarrow\lambda/4$), was bei Mikrostreifenleitungen auf FR4-Substrat ($\epsilon_{r\text{,eff}}\approx4$) laut Online-Rechner in einer Frequenz von 12.5 GHz, also ungefähr der Eingangsfrequenz des LNBs resultiert. Vermutlich zeigten sich dort während der Entwicklung Probleme durch Einkopplungen in die Versorgungsspannung, vielleicht sogar durch Diodenpacks und Linearregler bis in die Ausgänge.
 		
 	\subsection{HF-seitige Platine}
 	
@@ -104,7 +104,7 @@ eprint=false
 		
 		\noindent Zu Beginn sei gesagt, dass der spezifische Downconverter RT350A von Rafael Micro nicht dokumentiert ist. Dieser ist auch bei keinem mir bekannten Distributor erhältlich. Alles nachfolgende wird durch Transfer von verwandten Bausteinen und eigenem Reverse Engineering zusammengetragen.\\
 		
-		\noindent Auf der Homepage von Rafael Micro \cite{RafaelMicro} finden sich diverse Downconverter speziell für den Einsatz für den Satellitenempfang, diese sind dort tabellarisch aufgeführt. Dort tauchen auch Downconverter ICs mit ähnlicher Teilenummer auf:\\
+		\noindent Auf der Homepage von Rafael Micro \cite{RafaelMicro} finden sich diverse Downconverter speziell für den Einsatz für den Satellitenempfang, diese sind dort tabellarisch aufgeführt. Dort sind Downconverter ICs mit ähnlichen Teilenummern gelistet:\\
 		
 		
 		\begin{minipage}{\textwidth}
